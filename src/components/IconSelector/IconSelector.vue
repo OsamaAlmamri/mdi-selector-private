@@ -1,35 +1,43 @@
 <template>
-  <div class="icon_body">
-    <div class="container">
-      <form class="nosubmit">
-        <input v-model="query" class="nosubmit" type="search" placeholder="Search...">
-      </form>
-      <i :class="['mdi', 'mdi-' + selected]"></i>
+  <div class="search-header">
+    <div class="icon_body">
+      <div class="container ">
+        <form class="nosubmit">
+          <input v-model="query" class="nosubmit" type="search" placeholder="Search...">
+        </form>
+        <i :class="['mdi', 'mdi-' + selected]"></i>
+      </div>
     </div>
   </div>
-  <div class="flex-row">
+  <div class="content" :style="{'max-height':height}">
+    <div class="flex-row">
 
-    <div class="flex-cell" v-for="item in filteredItems">
-      <div class="iconbox" @click="select(item?.id)">
-        <!--        <i class="medium material-icons">{{item?.name}}</i>-->
-        <i :class="['mdi', 'mdi-' + item?.id]"></i>
+      <div class="flex-cell" v-for="item in filteredItems">
+        <div class="iconbox" @click="select(item?.id)">
+          <!--        <i class="medium material-icons">{{item?.name}}</i>-->
+          <i :class="['mdi', 'mdi-' + item?.id]"></i>
+        </div>
+        <div class="caption">{{ item?.name }}</div>
       </div>
-      <div class="caption">{{ item?.name }}</div>
     </div>
   </div>
 </template>
 
 
 <script lang="ts">
-  import { defineComponent } from 'vue'
+import {defineComponent} from 'vue'
 
-  import {computed, ref} from "vue";
-  export default defineComponent({
+import {computed,onMounted, ref} from "vue";
+
+export default defineComponent({
   name: "IconSelector",
   props: {
     modelValue: {
       type: String,
       default: 'approved'
+    }, height: {
+      type: String,
+      default: "300 px"
     }
   },
 
@@ -29002,11 +29010,14 @@
     ])
     const selected = ref('')
 
+    onMounted(() => {
+      selected.value =props.modelValue // <div>
+    })
     function select(selection) {
       selected.value = selection;
       // props.modelValue = selection;
       console.log(selection)
-      ctx.emit('update:modelValue',selection)
+      ctx.emit('update:modelValue', selection)
     }
 
     const filteredItems = computed(() => {
@@ -29025,7 +29036,6 @@
     }
 
   },
-
 
 
 });
